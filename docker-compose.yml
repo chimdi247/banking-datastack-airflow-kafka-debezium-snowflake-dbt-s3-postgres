@@ -53,6 +53,7 @@ x-airflow-common: &airflow-common
     AIRFLOW_ADMIN_PASSWORD: ${AIRFLOW_ADMIN_PASSWORD:?set in .env}
     INGEST_SCHEDULE: ${INGEST_SCHEDULE:-*/15 * * * *}
     DBT_SCHEDULE: ${DBT_SCHEDULE:-@daily}
+    DBT_TARGET: ${DBT_TARGET:-prod_password}
     <<: [*s3-env, *snowflake-env]
   volumes:
     - ./docker/dags:/opt/airflow/dags:ro
