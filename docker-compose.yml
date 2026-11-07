@@ -298,6 +298,9 @@ services:
   airflow-scheduler:
     <<: *airflow-common
     command: ["airflow", "scheduler"]
+    environment:
+      <<: *airflow-env
+      AIRFLOW__SCHEDULER__ENABLE_HEALTH_CHECK: "true"
     healthcheck:
       test: ["CMD-SHELL", "curl -fsS http://localhost:8974/health > /dev/null || exit 1"]
       interval: 30s
