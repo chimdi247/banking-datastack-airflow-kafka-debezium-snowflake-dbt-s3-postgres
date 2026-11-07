@@ -14,21 +14,32 @@ concurrency:
 jobs:
   deploy-dbt:
     runs-on: ubuntu-latest
+    timeout-minutes: 30
     environment: production
     env:
       SNOWFLAKE_ACCOUNT: ${{ secrets.SNOWFLAKE_ACCOUNT }}
       SNOWFLAKE_USER: ${{ secrets.SNOWFLAKE_USER }}
-      SNOWFLAKE_PASSWORD: ${{ secrets.SNOWFLAKE_PASSWORD }}
       SNOWFLAKE_ROLE: ${{ secrets.SNOWFLAKE_ROLE }}   # a dedicated transformer role, not ACCOUNTADMIN
       SNOWFLAKE_WAREHOUSE: ${{ secrets.SNOWFLAKE_WAREHOUSE }}
       SNOWFLAKE_DB: BANKING
     steps:
       - uses: actions/checkout@v5
+
       - uses: actions/setup-python@v6
         with:
           python-version: "3.13"
           cache: pip
+
       - run: pip install -r airflow/requirements-dbt.txt
+
+      - name: Write Snowflake private key
+        env:
+          SNOWFLAKE_PRIVATE_KEY: ${{ secrets.SNOWFLAKE_PRIVATE_KEY }}
+        run: |
+          umask 077
+          printf '%s' "$SNOWFLAKE_PRIVATE_KEY" > "$RUNNER_TEMP/rsa_key.p8"
+          echo "SNOWFLAKE_PRIVATE_KEY_PATH=$RUNNER_TEMP/rsa_key.p8" >> "$GITHUB_ENV"
+
       - name: dbt build (staging -> snapshots -> marts -> tests)
         working-directory: banking_dbt
         run: |

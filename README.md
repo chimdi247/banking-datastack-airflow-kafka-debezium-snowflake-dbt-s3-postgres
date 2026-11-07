@@ -12,7 +12,7 @@
 
 ---
 
-## 📌 Project Overview 
+## 📌 Project Overview
 This project demonstrates an **end-to-end modern data stack pipeline** for a **Banking domain**.  
 We simulate **customer, account, and transaction data**, stream changes in real time, transform them into analytics-ready models, and visualize insights — following **best practices of CI/CD and data warehousing**.
 
@@ -176,3 +176,33 @@ pytest tests/ -q        # batching logic + static checks on docker-compose.yml
 **LinkedIn**: [jayachandrakadiveti](https://www.linkedin.com/in/jayachandrakadiveti/)  
 **Contact**: [datawithjay1@gmail.com](mailto:datawithjay1@gmail.com)  
 
+
+## 1. Generate the key pair (on the VM, in the project folder)
+
+```bash
+openssl genrsa 2048 | openssl pkcs8 -topk8 -inform PEM -out secrets/rsa_key.p8 -nocrypt
+openssl rsa -in secrets/rsa_key.p8 -pubout -out secrets/rsa_key.pub
+sudo chgrp 0 secrets/rsa_key.p8
+chmod 640 secrets/rsa_key.p8
+cat secrets/rsa_key.pub
+
+SNOWFLAKE_PRIVATE_KEY= cat secrets/rsa_key.p8 (github actions repo secrets)
+```
+
+
+## 2. Create the role and user in Snowflake
+
+```bash
+USE ROLE ACCOUNTADMIN;
+
+CREATE ROLE IF NOT EXISTS BANKING_ROLE;
+GRANT CREATE WAREHOUSE ON ACCOUNT TO ROLE BANKING_ROLE;
+GRANT CREATE DATABASE  ON ACCOUNT TO ROLE BANKING_ROLE;
+
+CREATE USER IF NOT EXISTS BANKING_SVC
+  TYPE = SERVICE
+  DEFAULT_ROLE = BANKING_ROLE
+  RSA_PUBLIC_KEY = '<paste the key rsa_key.pub here>';
+
+GRANT ROLE BANKING_ROLE TO USER BANKING_SVC;
+```
