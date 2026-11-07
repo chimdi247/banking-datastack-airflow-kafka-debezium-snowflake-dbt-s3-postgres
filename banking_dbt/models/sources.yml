@@ -2,8 +2,9 @@ version: 2
 
 sources:
   - name: raw
-    database: BANKING
+    database: "{{ env_var('SNOWFLAKE_DB', 'BANKING') }}"
     schema: RAW
+    description: "Parquet rows landed from Debezium CDC; one VARIANT column `v` per table."
     tables:
       - name: customers
       - name: accounts

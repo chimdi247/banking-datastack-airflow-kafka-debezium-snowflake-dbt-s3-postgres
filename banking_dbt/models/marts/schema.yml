@@ -1,0 +1,15 @@
+version: 2
+
+models:
+  - name: fact_transactions
+    columns:
+      - name: transaction_id
+        data_tests: [unique, not_null]
+  - name: dim_customers
+    columns:
+      - name: customer_id
+        data_tests: [not_null]   # SCD2: several versions per customer, so not unique
+  - name: dim_accounts
+    columns:
+      - name: account_id
+        data_tests: [not_null]

@@ -1,0 +1,15 @@
+version: 2
+
+models:
+  - name: stg_customers
+    columns:
+      - name: customer_id
+        data_tests: [unique, not_null]
+  - name: stg_accounts
+    columns:
+      - name: account_id
+        data_tests: [unique, not_null]
+  - name: stg_transactions
+    columns:
+      - name: transaction_id
+        data_tests: [unique, not_null]

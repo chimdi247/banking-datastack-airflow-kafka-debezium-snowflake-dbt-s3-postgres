@@ -1,0 +1,4 @@
+# Installed in an isolated virtualenv inside the Airflow image so dbt's dependency tree can
+# never conflict with Airflow's. dbt Core 1.12 is the newest 1.x line; Fusion (2.x) is a separate engine.
+dbt-core>=1.12,<1.13
+dbt-snowflake>=1.12,<1.13

@@ -1,0 +1,3 @@
+# Extra libraries for DAG code. boto3 already ships with the Amazon provider that is
+# part of the official image, so it is deliberately not repeated here (avoids version fights).
+snowflake-connector-python>=4,<5

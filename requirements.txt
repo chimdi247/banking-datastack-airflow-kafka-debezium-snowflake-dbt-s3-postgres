@@ -1,17 +1,9 @@
-#data-generator
-pyyaml
-psycopg2-binary
-faker
-
-#CDC
-python-dotenv
-requests
-
-#Consumer
-kafka-python
-boto3
-fastparquet
-pandas
-
-#dbt
-dbt-snowflake
+# Everything needed to run / lint / test the repo's Python outside Docker (CI, local dev).
+# Container images install their own pinned subsets (see each service's requirements.txt).
+-r data-generator/requirements.txt
+-r consumer/requirements.txt
+-r kafka-debezium/requirements.txt
+-r airflow/requirements-dbt.txt
+snowflake-connector-python>=4,<5
+pytest>=8
+ruff>=0.8

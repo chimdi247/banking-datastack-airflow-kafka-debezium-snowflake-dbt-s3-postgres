@@ -1,0 +1,24 @@
+# Rendered by dbt at runtime; every value comes from the container environment.
+banking_dbt:
+  target: prod
+  outputs:
+    prod:
+      type: snowflake
+      account: "{{ env_var('SNOWFLAKE_ACCOUNT') }}"
+      user: "{{ env_var('SNOWFLAKE_USER') }}"
+      {% if env_var('SNOWFLAKE_PRIVATE_KEY_PATH', '') %}
+      private_key_path: "{{ env_var('SNOWFLAKE_PRIVATE_KEY_PATH') }}"
+      {% if env_var('SNOWFLAKE_PRIVATE_KEY_PASSPHRASE', '') %}
+      private_key_passphrase: "{{ env_var('SNOWFLAKE_PRIVATE_KEY_PASSPHRASE') }}"
+      {% endif %}
+      {% else %}
+      password: "{{ env_var('SNOWFLAKE_PASSWORD') }}"
+      {% endif %}
+      {% if env_var('SNOWFLAKE_ROLE', '') %}
+      role: "{{ env_var('SNOWFLAKE_ROLE') }}"
+      {% endif %}
+      database: "{{ env_var('SNOWFLAKE_DB') }}"
+      warehouse: "{{ env_var('SNOWFLAKE_WAREHOUSE') }}"
+      schema: ANALYTICS
+      threads: 4
+      client_session_keep_alive: false
